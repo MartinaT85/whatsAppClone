@@ -1,5 +1,4 @@
-import { ImageStyle, TextStyle } from "react-native";
-import { StyleSheet, ViewStyle } from "react-native";
+import { ImageStyle, TextStyle, StyleSheet, ViewStyle } from "react-native";
 
 export const styles = StyleSheet.create<{
   container: ViewStyle;

@@ -1,23 +1,28 @@
 import React from "react";
 import { Text, View, Image } from "react-native";
 import { styles } from "./index.styles";
+import { IChatListItemsProps } from "./chatListItemsTypes";
 
-type ChatListItemProps = {
-  chat: {
-    id: string;
-    user: {
-      image: string;
-      name: string;
-    };
-    lastMessage: {
-      text: string;
-      createdAt: string;
-    };
-  };
-};
+const ChatListItem: React.FC<IChatListItemsProps> = ({ chat }) => {
+  const now = new Date();
+  const createdAt = new Date(chat.lastMessage.createdAt);
+  const diff = now.getTime() - createdAt.getTime();
+  const minutesAgo = Math.floor(diff / (1000 * 60));
+  const hoursAgo = Math.floor(diff / (1000 * 60 * 60));
+  const daysAgo = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-const ChatListItem: React.FC<ChatListItemProps> = ({ chat }) => {
-  const name: string = "Lucas";
+  let timeAgo: string;
+
+  if (minutesAgo < 60) {
+    timeAgo = `${minutesAgo} minutes ago`;
+  } else if (hoursAgo < 24) {
+    timeAgo = `${hoursAgo} hours ago`;
+  } else if (daysAgo < 7) {
+    timeAgo = `${daysAgo} days ago`;
+  } else {
+    timeAgo = createdAt.toLocaleDateString();
+  }
+
   return (
     <View
       style={styles.container}
@@ -41,7 +46,7 @@ const ChatListItem: React.FC<ChatListItemProps> = ({ chat }) => {
             style={styles.name}
             numberOfLines={1}
             accessible={true}
-            accessibilityLabel={`${name}`}
+            accessibilityLabel={`${chat.user.name}`}
             accessibilityRole="text"
           >
             {chat.user.name}
@@ -52,7 +57,7 @@ const ChatListItem: React.FC<ChatListItemProps> = ({ chat }) => {
             accessibilityLabel={`Time of last message`}
             accessibilityRole="text"
           >
-            {chat.lastMessage.createdAt}
+            {timeAgo}
           </Text>
         </View>
         <Text
